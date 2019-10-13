@@ -16,4 +16,20 @@ object Monad {
 
     def pure[A] = List(_)
   }
+
+  implicit def functionMonad[Y] = new Monad[Y => ?] {
+    def pure[A]: A => Y => A = a => _ => a
+
+    def flatMap[A, B] = a => f => arg => f(a(arg))(arg)
+  }
+
+  implicit def myFuncMonad[F[_], Y](implicit ins: Monad[F]) = {
+    new Monad[MyFunc[F, Y, ?]] {
+      def pure[A] = a => MyFunc(_ => ins.pure(a))
+
+      def flatMap[A, B] = a => f => MyFunc { y =>
+        ins.flatMap(a.run(y))(f(_).run(y))
+      }
+    }
+  }
 }
