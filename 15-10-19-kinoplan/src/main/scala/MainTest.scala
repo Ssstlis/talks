@@ -1,13 +1,8 @@
 object MainTest extends App {
-  type =>?[A, B] = A => Option[B]
-  
-  val f: Int =>? Int = ???
-  val g: Int =>? String = ???
-  val j: String =>? List[Char] = ???
+  trait A
+  trait B { val list: List[A] }
+  trait C { val list: List[B] }
+  trait D { val list: List[C] }
 
-  def compose[A, B, C](f: B =>? C)(g: A =>? B): A =>? C = {
-    v => g.apply(v).flatMap(f)
-  }
-
-  val composed: Int =>? List[Char] = compose(j)(compose(g)(f))
+  val extract: D => List[A] = ???
 }
