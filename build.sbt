@@ -4,6 +4,7 @@ lazy val talk = project
   .in(file("15-10-19-kinoplan"))
   .settings(
     addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.6"),
+    addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
 
     scalaVersion := "2.12.10",
     scalacOptions := Seq(
