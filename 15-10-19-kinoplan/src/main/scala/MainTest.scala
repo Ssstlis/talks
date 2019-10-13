@@ -1,16 +1,14 @@
 object MainTest extends App {
-  import scala.concurrent.{Future, Await}
-  import scala.concurrent.duration.Duration
-  import scala.concurrent.ExecutionContext.Implicits.global
+  import cats.effect.IO
   import java.util.concurrent.atomic.AtomicInteger
 
   val counter = new AtomicInteger(0)
-  val get = Future(counter.get)
+  val get = IO.delay(counter.get)
 
-  Await.result(
-    for {
-      a1 <- get
-      _  <- Future(counter.set(a1 + 1))
-      a2 <- get
-    } yield println(a1 + a2), Duration.Inf)
+  (for {
+    a1 <- get
+    _  <- IO.delay(counter.set(a1 + 1))
+    a2 <- get
+    _  <- IO.delay(println(a1 + a2))
+  } yield ()).unsafeRunSync()
 }

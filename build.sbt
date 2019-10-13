@@ -27,5 +27,8 @@ lazy val talk = project
     sources in(Compile, doc) := Seq.empty,
     publishArtifact in(Compile, packageDoc) := false,
     name := "15-10-19-kinoplan",
-    libraryDependencies += "org.scala-lang" % "scala-library" % "2.12.10"
+    libraryDependencies ++= Seq(
+      "org.scala-lang" %  "scala-library" % "2.12.10",
+      "org.typelevel"  %% "cats-effect"   % "2.0.0"
+    )
   )
