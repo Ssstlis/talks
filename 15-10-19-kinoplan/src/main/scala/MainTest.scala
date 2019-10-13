@@ -5,11 +5,12 @@ object MainTest extends App {
   import java.util.concurrent.atomic.AtomicInteger
 
   val counter = new AtomicInteger(0)
+  val get = Future(counter.get)
 
   Await.result(
     for {
-      a1 <- Future(counter.get)
+      a1 <- get
       _  <- Future(counter.set(a1 + 1))
-      a2 <- Future(counter.get)
+      a2 <- get
     } yield println(a1 + a2), Duration.Inf)
 }
