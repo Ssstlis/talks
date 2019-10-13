@@ -1,7 +1,9 @@
 case class MyFunc[F[_], A, B](run: A => F[B]) {
-  def compose[C](g: MyFunc[F, C, A]): MyFunc[F, C, B] = ???
+  def compose[C](g: MyFunc[F, C, A])(implicit ins: Monad[F]): MyFunc[F, C, B] = {
+    MyFunc(c => ins.flatMap(g.run(c))(run))
+  }
 
-  def andThen[C](g: MyFunc[F, B, C]): MyFunc[F, A, C] = {
+  def andThen[C](g: MyFunc[F, B, C])(implicit ins: Monad[F]): MyFunc[F, A, C] = {
     g.compose(this)
   }
 }
