@@ -1,5 +1,9 @@
 object MainTest extends App {
   val f: Int => Option[Int] = ???
   val g: Int => Option[String] = ???
-  val composed: Int => Option[String] = f.apply(_).flatMap(g)
+  val j: String => Option[List[Char]] = ???
+
+  val composed: Int => Option[List[Char]] = {
+    f.apply(_).flatMap(v => g(v).flatMap(j))
+  }
 }
