@@ -7,7 +7,7 @@ case class MyFunc[F[_], A, B](run: A => F[B]) {
     g.compose(this)
   }
 
-  def map[C](f: B => C)(implicit ins: Monad[F]): MyFunc[F, A, C] = {
-    MyFunc(a => ins.flatMap(run(a))(f))
+  def map[C](f: B => C)(implicit ins: Functor[F]): MyFunc[F, A, C] = {
+    MyFunc(a => ins.map(run(a))(f))
   }
 }
