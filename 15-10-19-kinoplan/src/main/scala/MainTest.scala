@@ -1,16 +1,7 @@
 object MainTest extends App {
-  trait A
-  trait B { val list: List[A] }
-  trait C { val list: List[B] }
-  trait D { val list: List[C] }
-
+  type =>?[A, B] = A => Option[B]
+  def compose[A, B, C](g: B =>? C)(f: A =>? B): A =>? C = f(_).flatMap(g)
   def compose[A, B, C](g: B => List[C])(f: A => List[B]): A => List[C] = {
-    a => f.apply(a).flatMap(g)
+    f.apply(_).flatMap(g)
   }
-
-  val d2c: D => List[C] = _.list
-  val c2b: C => List[B] = _.list
-  val b2a: B => List[A] = _.list
-
-  val extract: D => List[A] = compose(b2a)(compose(c2b)(d2c))
 }
