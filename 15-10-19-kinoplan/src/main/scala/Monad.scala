@@ -1,13 +1,7 @@
-trait Monad[F[_]] extends Applicative[F] {
-  def flatMap[A, B]: F[A] => (A => F[B]) => F[B]
+trait Monad[F[_]] extends Applicative[F] with FlatMap[F] {
+  override def map[A, B] = a => f => flatMap(a)(v => pure(f(v)))
 
-  override def map[A, B]: F[A] => (A => B) => F[B] = a => f => {
-    flatMap(a)(v => pure(f(v)))
-  }
-
-  override def ap[A, B]: F[A => B] => F[A] => F[B] = fa => a => {
-    flatMap(fa)(map(a)(_))
-  }
+  override def ap[A, B] = fa => a => flatMap(fa)(map(a)(_))
 }
 
 object Monad {
