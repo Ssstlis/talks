@@ -3,5 +3,7 @@ object MainTest extends App {
     case int if int % 2 == 0 => int
   }
 
-  println(pfOddInt.apply(3))
+  val lifted: Int => Option[Int] = pfOddInt.lift
+
+  println(lifted.apply(3))
 }
