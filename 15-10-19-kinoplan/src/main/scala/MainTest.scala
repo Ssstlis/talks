@@ -3,11 +3,11 @@ object MainTest extends App {
   import scala.concurrent.duration.Duration
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  def compute1 = { println("1") ; 1 }
-  def compute2 = { println("2") ; 2 }
+  val compute1 = { println("1") ; 1 }
+  val compute2 = { println("2") ; 2 }
 
-  def fa = Future(compute1)
-  def fb = Future(compute2)
+  val fa = Future(compute1)
+  val fb = Future(compute2)
 
   Await.result(
     for {
