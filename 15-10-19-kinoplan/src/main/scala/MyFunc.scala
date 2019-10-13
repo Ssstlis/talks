@@ -6,4 +6,8 @@ case class MyFunc[F[_], A, B](run: A => F[B]) {
   def andThen[C](g: MyFunc[F, B, C])(implicit ins: Monad[F]): MyFunc[F, A, C] = {
     g.compose(this)
   }
+
+  def map[C](f: B => C)(implicit ins: Monad[F]): MyFunc[F, A, C] = {
+    MyFunc(a => ins.flatMap(run(a))(f))
+  }
 }
