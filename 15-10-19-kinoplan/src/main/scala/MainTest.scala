@@ -3,9 +3,14 @@ object MainTest extends App {
     implicit ins: MyFlatMap[F]
   ): A => F[C] = v => ins.flatMap(f(v))(g)
 
-  val f: Int => Option[Int] = ???
-  val g: Int => Option[String] = ???
-  val j: String => Option[List[Char]] = ???
+  trait A
+  trait B { val list: List[A] }
+  trait C { val list: List[B] }
+  trait D { val list: List[C] }
 
-  val composed: Int => Option[List[Char]] = compose(j)(compose(g)(f))
+  val d2c: D => List[C] = _.list
+  val c2b: C => List[B] = _.list
+  val b2a: B => List[A] = _.list
+
+  val extract: D => List[A] = compose(b2a)(compose(c2b)(d2c))
 }
