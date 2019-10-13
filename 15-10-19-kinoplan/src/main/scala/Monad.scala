@@ -16,12 +16,4 @@ object Monad {
 
     def pure[A] = List(_)
   }
-
-  implicit def mapMonad[K] = new Monad[Map[K, ?]] {
-    def flatMap[A, B] = a => f => a.flatMap { case (k, v) =>
-      f(v).get(k).map(k -> _)
-    }
-
-    def pure[A] = ???
-  }
 }
