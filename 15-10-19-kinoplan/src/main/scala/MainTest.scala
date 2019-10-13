@@ -1,14 +1,13 @@
-object MainTest extends App {
-  import cats.effect.IO
-  import java.util.concurrent.atomic.AtomicInteger
+import cats.effect.concurrent.Ref
+import cats.effect.{ExitCode, IO, IOApp}
 
-  val counter = new AtomicInteger(0)
-  val get = IO.delay(counter.get)
-
-  (for {
-    a1 <- get
-    _  <- IO.delay(counter.set(a1 + 1))
-    a2 <- get
-    _  <- IO.delay(println(a1 + a2))
-  } yield ()).unsafeRunSync()
+object MainTest extends IOApp {
+  def run(args: List[String]): IO[ExitCode] = {
+    for {
+      ref <- Ref[IO].of(0)
+      a1  <- ref.modify(a => (a + 1, a))
+      a2  <- ref.get
+      _   <- IO.delay(println(a1 + a2))
+    } yield ExitCode.Success
+  }
 }
