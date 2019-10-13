@@ -1,9 +1,13 @@
 object MainTest extends App {
-  val pfOddInt: PartialFunction[Int, Int] = {
+  val pf1: PartialFunction[Int, Int] = {
     case int if int % 2 == 0 => int
   }
 
-  val lifted: Int => Option[Int] = pfOddInt.lift
+  val pf2: PartialFunction[Int, String] = {
+    case int if int == 4 => "Success"
+  }
 
-  println(lifted.apply(3))
+  val pf3 = pf2 compose pf1
+
+  println(pf3.apply(2))
 }
