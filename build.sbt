@@ -1,7 +1,7 @@
 import com.softwaremill.clippy.ClippySbtPlugin.autoImport.clippyColorsEnabled
 
 lazy val talk = project
-  .in(file("."))
+  .in(file("15-10-19-kinoplan"))
   .settings(
     addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.6"),
 
