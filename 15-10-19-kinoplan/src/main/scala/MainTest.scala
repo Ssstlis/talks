@@ -7,7 +7,7 @@ object MainTest extends App {
     case int if int == 4 => "Success"
   }
 
-  val pf3 = pf2 compose pf1
+  val pf3: PartialFunction[Int, String] = pf2 compose pf1
 
   println(pf3.apply(2))
 }
