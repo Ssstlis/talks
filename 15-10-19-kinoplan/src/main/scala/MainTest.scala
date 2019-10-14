@@ -1,4 +1,5 @@
 object MainTest extends App {
+  import Monad._
 
   val f: MyFunc[Option, Int, Int] = ???
   val g: MyFunc[Option, Int, String] = ???
