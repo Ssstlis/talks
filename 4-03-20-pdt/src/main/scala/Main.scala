@@ -93,13 +93,13 @@ object Main extends App {
   type Foo = Succ[Succ[_0]]
 
   val f: Aux[Int :*: Boolean :*: A :*: Main.HNil.type, Foo, A] =
-    At[Int :*: Boolean :*: A :*: Main.HNil.type, Foo]
+    At[Int :*: Boolean :*: A :*: Main.HNil.type, Succ[Succ[_0]]]//(next(next(fix)))
 
-  val thirdFoo0: String = fooH.atH[Foo]
-  val thirdFoo1: String = thirdH(fooH)
+  val thirdFoo0: String = fooH.atH[Foo]//(next(next(fix)))
+  val thirdFoo1: String = thirdH(fooH)//(next(next(fix)))
 
-  val thirdBar0: A = barH.atH[Foo]
-  val thirdBar1: A = thirdH(barH)
+  val thirdBar0: A = barH.atH[Foo]//(next(next(fix)))
+  val thirdBar1: A = thirdH(barH)//(next(next(fix)))
 
   //  fooH.atH[Succ[Foo]] doesn't compile
 }
