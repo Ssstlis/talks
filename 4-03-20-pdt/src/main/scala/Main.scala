@@ -37,8 +37,13 @@ object Main extends App {
 
   sealed trait HList extends Product with Serializable
 
-  final case object HNil extends HList
-  final case class :*:[H, L <: HList](head: H, tail: L) extends HList
+  sealed trait HNil extends HList {
+    def :*:[H](h : H) = Main.:*:(h, this)
+    override def toString = "HNil"
+  }
+
+  final case object HNil extends HNil
+  final case class :*:[+H, L <: HList](head: H, tail: L) extends HList
 
   sealed trait Nat
 
@@ -46,8 +51,8 @@ object Main extends App {
 
   sealed trait Succ[P <: Nat] extends Nat
 
-  val fooH: Int :*: Boolean :*: String :*: Main.HNil.type = //<--Derived type
-    :*:(1, :*:(true, :*:("bar", HNil)))
+  val fooH: Int :*: Boolean :*: String :*: HNil = //<--Derived type
+    1 :*: true :*: "bar" :*: HNil
 
   val thirdH1: String = fooH.tail.tail.head
 
@@ -84,16 +89,34 @@ object Main extends App {
       }
   }
 
+  trait Prepend[H, L <: HList] extends Serializable {
+    type Out <: HList
+    def apply(h: H, tail: L): Out
+  }
+
+  object Prepend {
+    type Aux[H, L <: HList, Out0 <: HList] = Prepend[H, L] { type Out = Out0 }
+
+    def apply[H, L <: HList](implicit prep: Prepend[H, L]): Aux[H, L, prep.Out] = prep
+
+    implicit def prepend[H, L <: HList]: Aux[H, L, H :*: L] = new Prepend[H, L] {
+      type Out = H :*: L
+
+      def apply(h: H, tail: L): Out = :*:(h, tail)
+    }
+  }
+
   implicit class HListOps[L <: HList](l: L) {
     def atH[N <: Nat](implicit at: At[L, N]): at.Out = at(l)
+    def :*:[H](elem: H)(implicit prep: Prepend[H, L]): prep.Out = prep(elem, l)
   }
 
   def thirdH[L <: HList](l: L)(implicit at: At[L, Succ[Succ[_0]]]): at.Out = at(l)
 
   type Foo = Succ[Succ[_0]]
 
-  val f: Aux[Int :*: Boolean :*: A :*: Main.HNil.type, Foo, A] =
-    At[Int :*: Boolean :*: A :*: Main.HNil.type, Succ[Succ[_0]]]//(next(next(fix)))
+  val f: Aux[Int :*: Boolean :*: A :*: Main.HNil, Foo, A] =
+    At[Int :*: Boolean :*: A :*: Main.HNil, Succ[Succ[_0]]]//(next(next(fix)))
 
   val thirdFoo0: String = fooH.atH[Foo]//(next(next(fix)))
   val thirdFoo1: String = thirdH(fooH)//(next(next(fix)))
